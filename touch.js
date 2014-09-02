@@ -1,3 +1,17 @@
+/**CustomEvent polyfill https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent*/
+(function () {
+    function CustomEvent ( event, params ) {
+        params = params || { bubbles: false, cancelable: false, detail: undefined };
+        var evt = document.createEvent( 'CustomEvent' );
+        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+        return evt;
+    };
+
+    CustomEvent.prototype = window.Event.prototype;
+
+    window.CustomEvent = CustomEvent;
+})();
+
 /*
  *  在tap.js的基础上增加了swipe的功能
  *  tap.js 地址:https://github.com/alexgibson/tap.js
@@ -21,16 +35,10 @@
     }
 
     function createCustomEvent(touchName){
-        var evt;
-        if (window.CustomEvent) {
-            evt = new window.CustomEvent(touchName, {
-                bubbles: true,
-                cancelable: true
-            });
-        } else {
-            evt = document.createEvent('Event');
-            evt.initEvent(touchName, true, true);
-        }
+        var evt = new window.CustomEvent(touchName, {
+            bubbles: true,
+            cancelable: true
+        });
         return evt;
     } 
     
