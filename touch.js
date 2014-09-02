@@ -56,10 +56,10 @@
         // 移动大于10px的时候认为移动了
         e.preventDefault();
         if (Math.abs(e.touches[0].clientX - this.startX) > 10 || Math.abs(e.touches[0].clientY - this.startY) > 10) {
-            if(e.touches[0].clientX - this.startX > 0){
+            if(e.touches[0].clientX - this.startX > 10){
                 this.moveDirection = 'right';
             }
-            if(e.touches[0].clientX - this.startX < 0){
+            if(e.touches[0].clientX - this.startX < 10){
                 this.moveDirection = 'left';
             }
             this.moved = true;
