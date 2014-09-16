@@ -28,3 +28,19 @@ touch
 	function onSwipeRight(){//右滑}
 
 ```
+##基于zepto的touch模块,依赖zepto
+* 暂时不支持绑定代理事件
+* html代码如下
+
+```html
+	<script src="zepto-touch.js"></script>
+```
+```
+* js代码如下
+
+```javascript
+
+	$(el).on('tap',function(){});
+	$(el).on('swipeleft',function(){});
+	$(el).on('swiperight',function(){});
+```
