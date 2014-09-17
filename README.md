@@ -8,10 +8,12 @@ touch
 
 ##使用方法
 
-*html代码如下
+* html代码如下
+
 <pre><code><script src="touch.js"></script></code></pre>
 
-*js代码如下
+* js代码如下
+
 <pre><code>
 var el = document.getElementById('your el');
 new Touch(el);
@@ -27,11 +29,14 @@ function onSwipeRight(){//右滑}
 ##基于zepto的touch模块,依赖zepto
 * 暂时不支持绑定代理事件
 * html代码如下
+
 <pre><code>
 	<script src="zepto.js"></script>
 	<script src="zepto-touch.js"></script>
 </pre></code>
-*js代码如下
+
+* js代码如下
+
 <pre><code>
 	//绑定事件
 	$(el).on('tap',function(){});
