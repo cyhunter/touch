@@ -10,11 +10,13 @@ touch
 
 * html代码如下
 
-<pre><code><script src="touch.js"></script></code></pre>
+```html
+	<script src="touch.js"></script>
+```
 
 * js代码如下
 
-<pre><code>
+```javascript
 var el = document.getElementById('your el');
 new Touch(el);
 
@@ -24,20 +26,20 @@ el.addEventListener('swiperight',onSwipeRight,false);
 function onTap(){//tap动作}
 function onSwipeLeft(){//左滑}
 function onSwipeRight(){//右滑}
-</code></pre>
+```
 
 ##基于zepto的touch模块,依赖zepto
 * 暂时不支持绑定代理事件
 * html代码如下
 
-<pre><code>
+```html
 	<script src="zepto.js"></script>
 	<script src="zepto-touch.js"></script>
-</pre></code>
+```
 
 * js代码如下
 
-<pre><code>
+```javascript
 	//绑定事件
 	$(el).on('tap',function(){});
     $(el).on('swipeleft',function(){});
@@ -46,4 +48,4 @@ function onSwipeRight(){//右滑}
     $(el).off('tap',function(){});
     $(el).off('swipeleft',function(){});
     $(el).off('swiperight',function(){});
-</code></pre>
+```
