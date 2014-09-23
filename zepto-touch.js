@@ -125,13 +125,17 @@
         oldUnBind = $.fn.off;
     $.fn.on = function( evt ){
         if( /(^| )(tap|swipe)( |$)/.test( evt ) ){
-            Touch( this[0] );
+            for(var i=0; i<this.length; i++){
+                Touch( this[i] );
+            }
         }
         return oldBind.apply( this, arguments );
     };
     $.fn.off = function( evt ){
         if( /(^| )(tap|swipe)( |$)/.test( evt ) ){
-            unTouch( this[0] );
+            for(var i=0; i<this.length; i++){
+                unTouch( this[] );
+            }
         }
         return oldUnBind.apply( this, arguments );
     };
