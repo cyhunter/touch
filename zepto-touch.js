@@ -134,7 +134,7 @@
     $.fn.off = function( evt ){
         if( /(^| )(tap|swipe)( |$)/.test( evt ) ){
             for(var i=0; i<this.length; i++){
-                unTouch( this[] );
+                unTouch( this[i] );
             }
         }
         return oldUnBind.apply( this, arguments );
