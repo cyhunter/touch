@@ -122,17 +122,37 @@
         _Touch(el).destroy();
     };
     var oldBind = $.fn.on,
-        oldUnBind = $.fn.off;
+        oldUnBind = $.fn.off,
+        onArray = [];//对于相同的el只绑定一次
     $.fn.on = function( evt ){
-        if( /(^| )(tap|swipe)( |$)/.test( evt ) ){
-            for(var i=0; i<this.length; i++){
-                Touch( this[i] );
+
+        if( /(^| )(tap|swipeleft|swiperight)( |$)/.test( evt ) ){
+            if(onArray.length == 0){
+                for(var i=0;i<this.length;i++){
+                    onArray.push(this[i]);
+                    Touch(this[i]);
+                }
+            }else{
+                var length = onArray.length;
+                for(var i=0; i<this.length;i++){
+                    var tap = 0;
+                    for(var j=0;j<length;j++){
+                        if(this[i] == onArray[j]){
+                            tap = 1;
+                            break;
+                        }
+                    }
+                    if(tap == 0){
+                        onArray.push(this[i]);
+                        Touch(this[i]);
+                    }
+                }
             }
         }
         return oldBind.apply( this, arguments );
     };
     $.fn.off = function( evt ){
-        if( /(^| )(tap|swipe)( |$)/.test( evt ) ){
+        if( /(^| )(tap|swipeleft|swiperight)( |$)/.test( evt ) ){
             for(var i=0; i<this.length; i++){
                 unTouch( this[i] );
             }
