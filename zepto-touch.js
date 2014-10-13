@@ -19,16 +19,19 @@
     'use strict';
     var t,x,y;
     var _Touch = function(el,evt){
-        function createCustomEvent(touchName){
-            var evt;
+        function createCustomEvent(touchName,e){
+            var evt,
+                touchDetail = e.changedTouches[0];
             if (window.CustomEvent) {
                 evt = new window.CustomEvent(touchName, {
                     bubbles: true,
-                    cancelable: true
+                    cancelable: true,
+                    detail : touchDetail
                 });
             } else {
-                evt = document.createEvent('Event');
-                evt.initEvent(touchName, true, true);
+                evt = document.createEvent('CustomEvent');
+                //规范https://developer.mozilla.org/zh-CN/docs/Web/API/Event/CustomEvent#initCustomEvent()
+                evt.initCustomEvent(touchName, true, true, detail);
             }
             return evt;
         } 
@@ -85,14 +88,14 @@
               
                 if (!this.moved) {
                     if(this.initEvt == 'tap'){
-                        evt = createCustomEvent('tap');
+                        evt = createCustomEvent('tap',e);
                     }
                 }else{
                     if(this.initEvt == 'swipeleft' || this.initEvt == 'swiperight'){
                         if(this.moveDirection == 'left'){
-                            evt = createCustomEvent('swipeleft');
+                            evt = createCustomEvent('swipeleft',e);
                         }else{
-                            evt = createCustomEvent('swiperight');
+                            evt = createCustomEvent('swiperight',e);
                         }
                     }
                 }
