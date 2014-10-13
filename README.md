@@ -29,7 +29,7 @@ zepto-touch.js
     $(el).off('swiperight',function(){});
 ```
 
-touch
+touch.js
 ==========
 实现手机上tap,swipe事件
 
