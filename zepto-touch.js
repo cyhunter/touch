@@ -18,7 +18,7 @@
 (function($) {
     'use strict';
     var t,x,y;
-    var _Touch = function(el){
+    var _Touch = function(el,evt){
         function createCustomEvent(touchName){
             var evt;
             if (window.CustomEvent) {
@@ -40,6 +40,7 @@
             startX : 0, //starting x coordinate
             startY : 0, //starting y coordinate
             hasTouchEventOccured : false, //flag touch event
+            initEvt : evt,
 
             start : function (e) { 
                 
@@ -51,6 +52,7 @@
                 this.startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
                 x = e.touches[0].clientX;
                 y = e.touches[0].clientY;
+                this.moveDirection = '';
             },
 
             move : function (e) {
@@ -76,22 +78,26 @@
                 if (this.hasTouchEventOccured) {
 
                     e.preventDefault();
-                    e.stopPropagation();
+                    //e.stopPropagation();不阻止冒泡，是为了让在父元素也能够获取到touchend事件
                     this.hasTouchEventOccured = false;
                     //return;
                 }
               
                 if (!this.moved) {
-                    evt = createCustomEvent('tap');
+                    if(this.initEvt == 'tap'){
+                        evt = createCustomEvent('tap');
+                    }
                 }else{
-                    if(this.moveDirection == 'left'){
-                        evt = createCustomEvent('swipeleft');
-                    }else{
-                        evt = createCustomEvent('swiperight');
+                    if(this.initEvt == 'swipeleft' || this.initEvt == 'swiperight'){
+                        if(this.moveDirection == 'left'){
+                            evt = createCustomEvent('swipeleft');
+                        }else{
+                            evt = createCustomEvent('swiperight');
+                        }
                     }
                 }
                 // dispatchEvent returns false if any handler calls preventDefault,
-                if (!e.target.dispatchEvent(evt)) {
+                if (evt && !e.target.dispatchEvent(evt)) {
                     // in which case we want to prevent clicks from firing.
                     e.preventDefault();
                 }
@@ -128,8 +134,8 @@
         return touch;
          
     };
-    var Touch = function(el){
-        var func = _Touch(el);
+    var Touch = function(el,evt){
+        var func = _Touch(el,evt);
 
         el.addEventListener('touchstart', func, false);
         el.addEventListener('touchmove', func, false);
@@ -137,8 +143,8 @@
         el.addEventListener('touchcancel', func, false);
 
     };
-    var unTouch = function(el){
-        _Touch(el).destroy();
+    var unTouch = function(el,evt){
+        _Touch(el,evt).destroy();
     };
     var oldBind = $.fn.on,
         oldUnBind = $.fn.off,
@@ -146,10 +152,11 @@
     $.fn.on = function( evt ){
         
         if( /(^| )(tap|swipeleft|swiperight)( |$)/.test( evt ) ){ 
+            //为了不在同一个dom上绑定多次touch方法，因为tap,swipe事件其实都是封装的相同的touchstart,touchmove,touchend事件
             if(onArray.length == 0){
                 for(var i=0;i<this.length;i++){
                     onArray.push(this[i]);
-                    Touch(this[i]);
+                    Touch(this[i],evt);
                 }
             }else{
                 var length = onArray.length;
@@ -163,7 +170,7 @@
                     }
                     if(tap == 0){
                         onArray.push(this[i]);
-                        Touch(this[i]);
+                        Touch(this[i],evt);
                     }
                 }
             }
@@ -173,7 +180,7 @@
     $.fn.off = function( evt ){
         if( /(^| )(tap|swipeleft|swiperight)( |$)/.test( evt ) ){
             for(var i=0 ;i<this.length;i++){
-               unTouch( this[i] );
+               unTouch( this[i],evt );
             }
         }
         return oldUnBind.apply( this, arguments );
