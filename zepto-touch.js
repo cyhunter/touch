@@ -85,19 +85,22 @@
                     this.hasTouchEventOccured = false;
                     //return;
                 }
-              
-                if (!this.moved) {
-                    if(this.initEvt == 'tap'){
+                /*
+                 * 因为tap,swipe事件都是通过封装同样的事件达到，在同一个元素上会产生touch事件的多次绑定
+                 * 所以在具体构造事件的时候，还有判断传入的是否是对应的tap，swipe事件
+                 */
+                if (!this.moved) {//没有移动
+                    if(this.initEvt == 'tap'){//不能拿到this.moved那一行去
                         evt = createCustomEvent('tap',e);
                     }
-                }else{
-                    if(this.initEvt == 'swipeleft' || this.initEvt == 'swiperight'){
-                        if(this.moveDirection == 'left'){
-                            evt = createCustomEvent('swipeleft',e);
-                        }else{
-                            evt = createCustomEvent('swiperight',e);
-                        }
+                }else{//有移动
+                   
+                    if(this.moveDirection == 'left' && this.initEvt == 'swipeleft'){
+                        evt = createCustomEvent('swipeleft',e);
+                    }else if(this.moveDirection == 'right' && this.initEvt == 'swiperight'){
+                        evt = createCustomEvent('swiperight',e);
                     }
+                    
                 }
                 // dispatchEvent returns false if any handler calls preventDefault,
                 if (evt && !e.target.dispatchEvent(evt)) {
@@ -155,27 +158,8 @@
     $.fn.on = function( evt ){
         
         if( /(^| )(tap|swipeleft|swiperight)( |$)/.test( evt ) ){ 
-            //为了不在同一个dom上绑定多次touch方法，因为tap,swipe事件其实都是封装的相同的touchstart,touchmove,touchend事件
-            if(onArray.length == 0){
-                for(var i=0;i<this.length;i++){
-                    onArray.push(this[i]);
-                    Touch(this[i],evt);
-                }
-            }else{
-                var length = onArray.length;
-                for(var i=0; i<this.length;i++){
-                    var tap = 0;
-                    for(var j=0;j<length;j++){
-                        if(this[i] == onArray[j]){
-                            tap = 1;
-                            break;
-                        }
-                    }
-                    if(tap == 0){
-                        onArray.push(this[i]);
-                        Touch(this[i],evt);
-                    }
-                }
+            for(var i=0; i<this.length;i++){
+                Touch( this[i],evt );
             }
         }
         return oldBind.apply( this, arguments );
