@@ -109,7 +109,7 @@
                 }
                 //不支持preventDefault的机型，才会去click里面阻止click的原生行为
                 if(!e.defaultPrevented){
-                    t = new Date();
+                    t = +new Date();
                 }
             },
             cancel : function (e) {
@@ -177,7 +177,7 @@
         var time_threshold = 500,
             space_threshold = 100;
      
-        if (new Date() - t <= time_threshold && Math.abs(e.clientX - x) <= space_threshold && Math.abs(e.clientY - y) <= space_threshold) {
+        if (+new Date() - t <= time_threshold && Math.abs(e.clientX - x) <= space_threshold && Math.abs(e.clientY - y) <= space_threshold) {
             e.stopPropagation();
             e.preventDefault();
         }
